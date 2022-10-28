@@ -20,12 +20,17 @@ export class BoardRepository extends PrismaClient implements OnModuleInit {
     });
   }
 
-  async createBoard({ title, description, status }: CreateBoardDto) {
+  async createBoard({ id, title, description, status }: CreateBoardDto) {
     const board = await this.board.create({
       data: {
         title,
         description,
         status,
+        author: {
+          connect: {
+            id,
+          },
+        },
       },
     });
     return board;

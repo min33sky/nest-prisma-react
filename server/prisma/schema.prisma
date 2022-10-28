@@ -10,6 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  boards    Board[]
+
+  @@index([username])
+}
+
 model Board {
   id          String      @id @default(cuid())
   title       String
@@ -17,6 +28,11 @@ model Board {
   status      BoardStatus
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+  author      User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    String
+
+  @@index([authorId])
+  @@index([title])
 }
 
 enum BoardStatus {
